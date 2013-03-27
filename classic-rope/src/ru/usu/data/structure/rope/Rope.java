@@ -12,7 +12,5 @@ public interface Rope extends CharSequence
 {
 	public List<Rope> split(int index);
 	
-	public Rope merge(Rope left, Rope right);
-	
 	public void append(String string);
 }

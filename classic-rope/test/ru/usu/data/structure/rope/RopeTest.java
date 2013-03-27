@@ -19,4 +19,13 @@ public class RopeTest
 		
 		Assert.assertEquals(expected, rope.toString());
 	}
+	
+	@Test
+	public void ropeSimpleLengthTest()
+	{
+		String expected = "abc";
+		Rope rope = new RopeBuilder().build(expected);
+		
+		Assert.assertEquals(expected.length(), rope.length());
+	}
 }

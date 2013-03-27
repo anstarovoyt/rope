@@ -35,7 +35,7 @@ public class RopeImpl implements Rope {
 
 	@Override
 	public int length() {
-		return 0;
+		return root.influence;
 	}
 
 	@Override
@@ -54,12 +54,7 @@ public class RopeImpl implements Rope {
 	}
 
 	@Override
-	public Rope merge(Rope left, Rope right) {
-		return null;
-	}
-
-	@Override
-	public void append(String string) 
+	public void append(String appendix) 
 	{
 
 	}

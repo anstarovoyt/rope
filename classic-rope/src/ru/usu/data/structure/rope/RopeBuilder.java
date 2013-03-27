@@ -10,4 +10,8 @@ public class RopeBuilder
 	{
 		return new RopeImpl(value);
 	}
+	
+	public Rope merge(Rope left, Rope right) {
+		return null;
+	}
 }
