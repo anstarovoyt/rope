@@ -6,26 +6,33 @@ import java.util.List;
  * Rope implementation
  * 
  * @author astarovoyt
- *
+ * 
  */
-public class RopeImpl implements Rope 
-{
-	public static class RopeNode
-	{
+public class RopeImpl implements Rope {
+	public static class RopeNode {
 		RopeNode left;
 		RopeNode right;
 		String value;
 		int influence;
-		
-		public boolean isLeaf()
-		{
+
+		public boolean isLeaf() {
 			return null == left && null == right;
 		}
 	}
-	
-	@SuppressWarnings("unused")
+
 	private RopeNode root;
-	
+
+	public RopeImpl(String wrapped) {
+		root = createNode(wrapped);
+	}
+
+	private RopeNode createNode(String wrapped) {
+		RopeNode node = new RopeNode();
+		node.influence = wrapped.length();
+		node.value = wrapped;
+		return node;
+	}
+
 	@Override
 	public int length() {
 		return 0;
@@ -52,7 +59,33 @@ public class RopeImpl implements Rope
 	}
 
 	@Override
-	public void append(String string) {
+	public void append(String string) 
+	{
+
+	}
+
+	@Override
+	public String toString() 
+	{
+		StringBuilder builder = new StringBuilder();
+		toString(root, builder);
+		return builder.toString();
+	}
+	
+	private void toString(RopeNode node, StringBuilder builder)
+	{
+		if (null == node)
+		{
+			return;
+		}
 		
+		if (node.isLeaf())
+		{
+			builder.append(node.value);
+			return;
+		}
+		
+		toString(node.left, builder);
+		toString(node.right, builder);
 	}
 }
