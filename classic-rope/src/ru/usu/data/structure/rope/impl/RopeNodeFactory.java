@@ -7,6 +7,9 @@ class RopeNodeFactory
         return new RopeNode();
     }
 
+    /**
+     * @return leaf node with string as value
+     */
     public RopeNode createLeafNode(String str)
     {
         RopeNode node = createNode();
@@ -17,6 +20,9 @@ class RopeNodeFactory
         return node;
     }
 
+    /**
+     * @return rope node childs left and right
+     */
     public RopeNode createParentNode(RopeNode left, RopeNode right)
     {
         RopeNode node = createNode();
