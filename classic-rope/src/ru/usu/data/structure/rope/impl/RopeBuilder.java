@@ -1,9 +1,9 @@
-package ru.usu.data.structure.rope;
+package ru.usu.data.structure.rope.impl;
 
 import java.util.Arrays;
 import java.util.List;
 
-import ru.usu.data.structure.rope.RopeImpl.RopeNode;
+import ru.usu.data.structure.rope.Rope;
 
 /**
  * @author astarovoyt

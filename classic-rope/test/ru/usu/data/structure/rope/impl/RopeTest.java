@@ -1,4 +1,4 @@
-package ru.usu.data.structure.rope;
+package ru.usu.data.structure.rope.impl;
 
 import java.util.List;
 
@@ -6,7 +6,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import ru.usu.data.structure.rope.RopeImpl.RopeNode;
+import ru.usu.data.structure.rope.Rope;
+import ru.usu.data.structure.rope.impl.RopeBuilder;
+import ru.usu.data.structure.rope.impl.RopeImpl;
 
 /**
  * Tests for building rope
@@ -103,18 +105,17 @@ public class RopeTest
             Assert.assertEquals(expectedRight, ropes.get(1).toString());
         }
     }
-    
+
     @Test
     public void ropeNodeNormalizeTest()
     {
-    	RopeNode root = generateNonNormalizeRopeNode();
+        RopeNode root = generateNonNormalizeRopeNode();
         RopeBuilder builder = new RopeBuilder();
         builder.normalize(root);
-        
+
         Assert.assertEquals(true, root.left.isLeaf());
         Assert.assertEquals(true, root.right.isLeaf());
         Assert.assertEquals(SIMPLE_ROPE_STRING_EXPECTED, root.left.value);
-        
 
     }
 
@@ -128,19 +129,19 @@ public class RopeTest
 
         return new RopeImpl(root);
     }
-    
+
     private RopeNode generateNonNormalizeRopeNode()
     {
         RopeBuilder builder = new RopeBuilder();
-    	RopeNode leafLeft = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
-    	RopeNode leafRight = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
-    	
-    	RopeNode parent = builder.createParentNode(leafLeft, null);
-    	RopeNode parentOfparent = builder.createParentNode(null, parent);
-    	RopeNode parentOfparentOfparent = builder.createParentNode(null, parentOfparent);
-    	
-    	RopeNode root = builder.createParentNode(parentOfparentOfparent, leafRight);
-    	
-    	return root;
+        RopeNode leafLeft = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
+        RopeNode leafRight = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
+
+        RopeNode parent = builder.createParentNode(leafLeft, null);
+        RopeNode parentOfparent = builder.createParentNode(null, parent);
+        RopeNode parentOfparentOfparent = builder.createParentNode(null, parentOfparent);
+
+        RopeNode root = builder.createParentNode(parentOfparentOfparent, leafRight);
+
+        return root;
     }
 }

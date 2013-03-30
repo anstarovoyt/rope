@@ -1,6 +1,8 @@
-package ru.usu.data.structure.rope;
+package ru.usu.data.structure.rope.impl;
 
 import java.util.List;
+
+import ru.usu.data.structure.rope.Rope;
 
 /**
  * Rope implementation
@@ -10,49 +12,6 @@ import java.util.List;
  */
 public class RopeImpl implements Rope
 {
-    public static class RopeNode implements Cloneable
-    {
-        RopeNode left;
-        RopeNode right;
-        String value;
-        int influence;
-
-        public boolean isLeaf()
-        {
-            return null == left && null == right;
-        }
-
-        public boolean isHalf()
-        {
-            return (null == left) ^ (null == right);
-        }
-
-        public RopeNode getHalf()
-        {
-            return left == null ? right : left;
-        }
-
-        @Override
-        public RopeNode clone() throws CloneNotSupportedException
-        {
-            RopeNode newRope = new RopeNode();
-            newRope.influence = influence;
-            newRope.value = value;
-            
-            if (null != left)
-            {
-                newRope.left = left.clone();
-            }
-            
-            if (null != right)
-            {
-                newRope.right = right.clone();
-            }
-            
-            return newRope;
-        }
-    }
-
     final RopeNode root;
 
     public RopeImpl(String wrapped)
