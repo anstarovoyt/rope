@@ -1,7 +1,7 @@
 package ru.usu.data.structure.rope.impl;
 
 /**
- * RopeNode is a node of the Rope's tree
+ * RopeNode is a node of the RopeImpl's tree
  * 
  * @author astarovoyt
  *
@@ -11,7 +11,15 @@ public class RopeNode implements Cloneable
     RopeNode left;
     RopeNode right;
     String value;
+    
+    /**
+     * length
+     */
     int influence;
+    
+    /**
+     * length of max chain of childs
+     */
     int deep;
 
     /**
@@ -32,11 +40,11 @@ public class RopeNode implements Cloneable
 
     /**
      * @return not empty child
-     * @throw IllegalStateException if not is leaf
+     * @throw IllegalStateException if node is not half
      */
     public RopeNode getHalf()
     {
-        if (isLeaf())
+        if (!isHalf())
         {
             throw new IllegalStateException();
         }
@@ -69,6 +77,9 @@ public class RopeNode implements Cloneable
         return newRope;
     }
     
+    /**
+     * @return is node empty leaf?
+     */
     public boolean isEmpty()
     {
         return isLeaf() && null == value;
@@ -77,6 +88,6 @@ public class RopeNode implements Cloneable
     @Override
     public String toString()
     {
-        return value + " " + influence + " " + deep;
+        return value + " deep: " + deep;
     }
 }
