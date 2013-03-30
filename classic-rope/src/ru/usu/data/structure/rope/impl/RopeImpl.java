@@ -15,7 +15,7 @@ public class RopeImpl implements Rope
 {
     private final RopeNodeFactory factory = new RopeNodeFactory();
 
-    final RopeNode root;
+    RopeNode root;
 
     public RopeImpl(String wrapped)
     {
@@ -36,7 +36,7 @@ public class RopeImpl implements Rope
     @Override
     public char charAt(int index)
     {
-        if (index >= root.influence)
+        if (index >= length())
         {
             throw new IndexOutOfBoundsException("max index can be " + (root.influence - 1));
         }
@@ -62,9 +62,21 @@ public class RopeImpl implements Rope
     }
 
     @Override
-    public CharSequence subSequence(int start, int end)
+    public Rope subSequence(int start, int end)
     {
-        return null;
+        if (start < 0 || end > length())
+            throw new IllegalArgumentException("Illegal subsequence (" + start + "," + end + ")");
+
+        if (start == 0)
+        {
+            return this.split(end).get(0);
+        }
+        if (end == length())
+        {
+            return this.split(start).get(1);
+        }
+
+        return this.split(start).get(1).split(end - start).get(0);
     }
 
     @Override
@@ -76,7 +88,17 @@ public class RopeImpl implements Rope
     @Override
     public void append(String appendix)
     {
+        root = append(new RopeImpl(appendix)).root;
+    }
 
+    @Override
+    public RopeImpl append(Rope rope)
+    {
+        if (rope instanceof RopeImpl)
+        {
+            return RopeHelper.concatenate(this, (RopeImpl)rope);
+        }
+        return RopeHelper.concatenate(this, new RopeImpl(rope.toString()));
     }
 
     List<Rope> split(RopeImpl rope, int index)
@@ -108,11 +130,21 @@ public class RopeImpl implements Rope
         {
             String parentValue = parent.value;
 
-            leftParent.value = parentValue.substring(0, index);
-            leftParent.influence = leftParent.value.length();
+            if (index != 0)
+            {
+                leftParent.value = parentValue.substring(0, index);
+                leftParent.influence = leftParent.value.length();
+            }
 
-            rightParent.value = parentValue.substring(index);
-            rightParent.influence = rightParent.value.length();
+            leftParent.deep = 0;
+
+            if (parentValue.length() != index)
+            {
+                rightParent.value = parentValue.substring(index);
+                rightParent.influence = rightParent.value.length();
+            }
+
+            rightParent.deep = 0;
             return;
         }
 
@@ -121,20 +153,21 @@ public class RopeImpl implements Rope
 
         if (index < parent.left.influence)
         {
-            rightParent.right = parent.right.clone();
-
+            rightParent.right = parent.right;
             RopeNode leftChildOfRightParent = factory.createNode();
             rightParent.left = leftChildOfRightParent;
 
             split(leftParent, leftChildOfRightParent, parent.left, index);
+            rightParent.deep = RopeHelper.getIncDeep(rightParent);
         }
         else
         {
-            leftParent.left = parent.left.clone();
+            leftParent.left = parent.left;
             RopeNode rightChildOfleftParent = factory.createNode();
             leftParent.right = rightChildOfleftParent;
 
             split(rightChildOfleftParent, rightParent, parent.right, index - parent.left.influence);
+            leftParent.deep = RopeHelper.getIncDeep(leftParent);
         }
     }
 
@@ -153,7 +186,7 @@ public class RopeImpl implements Rope
             return;
         }
 
-        if (node.isLeaf())
+        if (node.isLeaf() && !node.isEmpty())
         {
             builder.append(node.value);
             return;
@@ -161,5 +194,17 @@ public class RopeImpl implements Rope
 
         toString(node.left, builder);
         toString(node.right, builder);
+    }
+
+    @Override
+    public int getDeep()
+    {
+        return root.deep;
+    }
+
+    @Override
+    public boolean isFlat()
+    {
+        return 0 == root.deep;
     }
 }

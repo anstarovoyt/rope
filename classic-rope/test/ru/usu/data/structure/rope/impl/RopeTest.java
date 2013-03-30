@@ -20,6 +20,8 @@ public class RopeTest
 
     public static final String SIMPLE_ROPE_STRING_EXPECTED = "abc";
 
+    private static final RopeNodeFactory factory = new RopeNodeFactory();
+
     @Test
     public void ropeSimpleToStringTest()
     {
@@ -83,8 +85,13 @@ public class RopeTest
         String expectedLeft = SIMPLE_ROPE_STRING_EXPECTED.substring(0, index);
         String expectedRight = SIMPLE_ROPE_STRING_EXPECTED.substring(index);
 
-        Assert.assertEquals(expectedLeft, ropes.get(0).toString());
-        Assert.assertEquals(expectedRight, ropes.get(1).toString());
+        Rope leftRope = ropes.get(0);
+        Rope rightRope = ropes.get(1);
+
+        Assert.assertEquals(expectedLeft, leftRope.toString());
+        Assert.assertEquals(expectedRight, rightRope.toString());
+        Assert.assertEquals(0, leftRope.getDeep());
+        Assert.assertEquals(0, rightRope.getDeep());
     }
 
     @Test
@@ -104,40 +111,110 @@ public class RopeTest
     }
 
     @Test
-    public void ropeNodeNormalizeTest()
+    public void ropeComplexSplitDeepTest()
     {
-        RopeNode root = generateNonNormalizeRopeNode();
-        RopeHelper.normalize(root);
+        Rope rope = generateComplexRope();
+        int index = 3;
 
-        Assert.assertEquals(true, root.left.isLeaf());
-        Assert.assertEquals(true, root.right.isLeaf());
-        Assert.assertEquals(SIMPLE_ROPE_STRING_EXPECTED, root.left.value);
+        List<Rope> ropes = rope.split(index);
 
+        Rope leftRope = ropes.get(0);
+        Rope rightRope = ropes.get(1);
+        RopeHelper.printRope((RopeImpl)leftRope);
+        Assert.assertEquals(1, leftRope.getDeep());
+        Assert.assertEquals(2, rightRope.getDeep());
     }
 
-    private Rope generateComplexRope()
+    @Test
+    public void ropeSimpleDeepTest()
     {
         RopeBuilder builder = new RopeBuilder();
-        RopeNode parentLeft = builder.createParentNode(builder.createLeafNode("my "), builder.createLeafNode("new "));
-        RopeNode parentRight = builder.createParentNode(builder.createLeafNode("str "), builder.createLeafNode("temp"));
+        Rope rope = builder.build(SIMPLE_ROPE_STRING_EXPECTED);
 
-        RopeNode root = builder.createParentNode(parentLeft, parentRight);
+        Assert.assertEquals(0, rope.getDeep());
+    }
+
+    @Test
+    public void ropeComplexDeepTest()
+    {
+        Rope rope = generateComplexRope();
+
+        Assert.assertEquals(2, rope.getDeep());
+    }
+
+    @Test
+    public void ropeComplexPrintTest()
+    {
+        RopeImpl rope = generateComplexRope();
+        RopeHelper.printRope(rope);
+    }
+
+    @Test
+    public void ropeSimpleAppendTest()
+    {
+        RopeBuilder builder = new RopeBuilder();
+        RopeImpl rope = builder.build(SIMPLE_ROPE_STRING_EXPECTED);
+        RopeImpl ropeAppendix = builder.build(SIMPLE_ROPE_STRING_EXPECTED);
+
+        RopeImpl result = rope.append(ropeAppendix);
+
+        RopeHelper.printRope(result);
+        Assert.assertEquals(SIMPLE_ROPE_STRING_EXPECTED + SIMPLE_ROPE_STRING_EXPECTED, result.toString());
+    }
+
+    @Test
+    public void ropeComplexAppendTest()
+    {
+        RopeImpl rope = generateComplexRope();
+        RopeImpl ropeAppendix = generateComplexRope();
+
+        RopeImpl result = rope.append(ropeAppendix);
+
+        RopeHelper.printRope(result);
+        Assert.assertEquals(COMPLEX_ROPE_STRING_EXPECTED + COMPLEX_ROPE_STRING_EXPECTED, result.toString());
+    }
+
+    @Test
+    public void ropeComplexSubSequenceTest()
+    {
+        RopeImpl rope = generateComplexRope();
+        RopeImpl ropeAppendix = generateComplexRope();
+
+        RopeImpl result = rope.append(ropeAppendix);
+
+        String string = COMPLEX_ROPE_STRING_EXPECTED + COMPLEX_ROPE_STRING_EXPECTED;
+
+        for (int i = 0; i < string.length() - 1; i++)
+        {
+            for (int j = i + 1; j < string.length(); j++)
+            {
+                Assert.assertEquals("substr " + i + " " + j, string.subSequence(i, j), result.subSequence(i, j).toString());
+            }
+        }
+    }
+
+    @Test
+    public void ropeComplexSubSequenceTest2()
+    {
+        RopeImpl rope = generateComplexRope();
+        RopeImpl ropeAppendix = generateComplexRope();
+
+        RopeImpl result = rope.append(ropeAppendix);
+
+        String string = COMPLEX_ROPE_STRING_EXPECTED + COMPLEX_ROPE_STRING_EXPECTED;
+        int i = 1;
+        int j = 5;
+
+        Assert.assertEquals(string.subSequence(i, j), result.subSequence(i, j).toString());
+    }
+
+    private RopeImpl generateComplexRope()
+    {
+        RopeNode parentLeft = factory.createParentNode(factory.createLeafNode("my "), factory.createLeafNode("new "));
+        RopeNode parentRight = factory.createParentNode(factory.createLeafNode("str "), factory.createLeafNode("temp"));
+
+        RopeNode root = factory.createParentNode(parentLeft, parentRight);
 
         return new RopeImpl(root);
-    }
-
-    private RopeNode generateNonNormalizeRopeNode()
-    {
-        RopeBuilder builder = new RopeBuilder();
-        RopeNode leafLeft = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
-        RopeNode leafRight = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
-
-        RopeNode parent = builder.createParentNode(leafLeft, null);
-        RopeNode parentOfparent = builder.createParentNode(null, parent);
-        RopeNode parentOfparentOfparent = builder.createParentNode(null, parentOfparent);
-
-        RopeNode root = builder.createParentNode(parentOfparentOfparent, leafRight);
-
-        return root;
     }
 }

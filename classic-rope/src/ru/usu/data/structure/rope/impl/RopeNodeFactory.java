@@ -24,7 +24,7 @@ class RopeNodeFactory
         node.influence = RopeHelper.getInfluence(left) + RopeHelper.getInfluence(right);
         node.left = left;
         node.right = right;
-
+        node.deep = RopeHelper.getIncDeep(node);
         return node;
     }
 }

@@ -12,6 +12,7 @@ public class RopeNode implements Cloneable
     RopeNode right;
     String value;
     int influence;
+    int deep;
 
     /**
      * @return is node a leaf?
@@ -52,6 +53,7 @@ public class RopeNode implements Cloneable
     {
         RopeNode newRope = new RopeNode();
         newRope.influence = influence;
+        newRope.deep = deep;
         newRope.value = value;
         
         if (null != left)
@@ -65,5 +67,16 @@ public class RopeNode implements Cloneable
         }
         
         return newRope;
+    }
+    
+    public boolean isEmpty()
+    {
+        return isLeaf() && null == value;
+    }
+
+    @Override
+    public String toString()
+    {
+        return value + " " + influence + " " + deep;
     }
 }
