@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import ru.usu.data.structure.rope.Rope;
+import ru.usu.data.structure.rope.RopeBuilder;
 
 /**
  * Tests for building rope

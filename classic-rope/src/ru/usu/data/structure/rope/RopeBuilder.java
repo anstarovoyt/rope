@@ -1,4 +1,6 @@
-package ru.usu.data.structure.rope.impl;
+package ru.usu.data.structure.rope;
+
+import ru.usu.data.structure.rope.impl.RopeImpl;
 
 
 /**
