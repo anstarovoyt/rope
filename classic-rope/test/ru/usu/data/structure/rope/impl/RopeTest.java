@@ -7,8 +7,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import ru.usu.data.structure.rope.Rope;
-import ru.usu.data.structure.rope.impl.RopeBuilder;
-import ru.usu.data.structure.rope.impl.RopeImpl;
 
 /**
  * Tests for building rope
@@ -80,7 +78,7 @@ public class RopeTest
         RopeBuilder builder = new RopeBuilder();
         Rope rope = builder.build(SIMPLE_ROPE_STRING_EXPECTED);
         int index = 1;
-        List<Rope> ropes = builder.split(rope, index);
+        List<Rope> ropes = rope.split(index);
 
         String expectedLeft = SIMPLE_ROPE_STRING_EXPECTED.substring(0, index);
         String expectedRight = SIMPLE_ROPE_STRING_EXPECTED.substring(index);
@@ -92,12 +90,11 @@ public class RopeTest
     @Test
     public void ropeComplexSplitTest()
     {
-        RopeBuilder builder = new RopeBuilder();
         Rope rope = generateComplexRope();
 
         for (int index = 0; index < COMPLEX_ROPE_STRING_EXPECTED.length(); index++)
         {
-            List<Rope> ropes = builder.split(rope, index);
+            List<Rope> ropes = rope.split(index);
             String expectedLeft = COMPLEX_ROPE_STRING_EXPECTED.substring(0, index);
             String expectedRight = COMPLEX_ROPE_STRING_EXPECTED.substring(index);
 
@@ -110,8 +107,7 @@ public class RopeTest
     public void ropeNodeNormalizeTest()
     {
         RopeNode root = generateNonNormalizeRopeNode();
-        RopeBuilder builder = new RopeBuilder();
-        builder.normalize(root);
+        RopeHelper.normalize(root);
 
         Assert.assertEquals(true, root.left.isLeaf());
         Assert.assertEquals(true, root.right.isLeaf());
