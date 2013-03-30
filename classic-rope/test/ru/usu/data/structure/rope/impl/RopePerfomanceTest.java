@@ -9,7 +9,7 @@ import ru.usu.data.structure.rope.RopeBuilder;
 
 public class RopePerfomanceTest
 {
-    public static final int COUNT = 10000;
+    public static final int COUNT = 100000;
 
     @Test
     public void appendTestJavaString()
@@ -52,12 +52,6 @@ public class RopePerfomanceTest
         long end = System.currentTimeMillis();
         
         System.out.print(end - start);
-        
-//        String result = RopeTest.SIMPLE_ROPE_STRING_EXPECTED;
-//        for (int i = 0; i < COUNT; i++)
-//        {
-//            result = result + RopeTest.SIMPLE_ROPE_STRING_EXPECTED;
-//        }
-//        Assert.assertEquals(result, rope.toString());
+        Assert.assertNotNull(rope);
     }
 }
