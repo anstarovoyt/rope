@@ -105,6 +105,30 @@ public class RopeBuilder
         }
     }
 
+    void normalize(RopeNode node)
+    {
+        if (node == null || node.isLeaf())
+        {
+            return;
+        }
+
+        if (node.isHalf())
+        {
+            RopeNode child = node.getHalf();
+            normalize(child);
+
+            //do normalize
+            node.left = child.left;
+            node.right = child.right;
+            node.value = child.value;
+        }
+        else
+        {
+            normalize(node.left);
+            normalize(node.right);
+        }
+    }
+
     private int getInfluence(RopeNode node)
     {
         return null == node ? 0 : node.influence;

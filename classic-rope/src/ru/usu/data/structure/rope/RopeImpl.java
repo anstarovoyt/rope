@@ -29,7 +29,7 @@ public class RopeImpl implements Rope
 
         public RopeNode getHalf()
         {
-            return left == null ? left : right;
+            return left == null ? right : left;
         }
 
         @Override

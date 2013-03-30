@@ -9,6 +9,8 @@ import org.junit.Test;
 import ru.usu.data.structure.rope.RopeImpl.RopeNode;
 
 /**
+ * Tests for building rope
+ * 
  * @author astarovoyt
  *
  */
@@ -51,7 +53,7 @@ public class RopeTest
     }
 
     @Test
-    public void ropeSimpleCharAt()
+    public void ropeSimpleCharAtTest()
     {
         Rope rope = new RopeBuilder().build(SIMPLE_ROPE_STRING_EXPECTED);
 
@@ -59,7 +61,7 @@ public class RopeTest
     }
 
     @Test
-    public void ropeComplexCharAt()
+    public void ropeComplexCharAtTest()
     {
         Rope rope = generateComplexRope();
 
@@ -71,7 +73,7 @@ public class RopeTest
     }
 
     @Test
-    public void ropeSimpleSplit()
+    public void ropeSimpleSplitTest()
     {
         RopeBuilder builder = new RopeBuilder();
         Rope rope = builder.build(SIMPLE_ROPE_STRING_EXPECTED);
@@ -86,7 +88,7 @@ public class RopeTest
     }
 
     @Test
-    public void ropeComplexSplit()
+    public void ropeComplexSplitTest()
     {
         RopeBuilder builder = new RopeBuilder();
         Rope rope = generateComplexRope();
@@ -101,6 +103,20 @@ public class RopeTest
             Assert.assertEquals(expectedRight, ropes.get(1).toString());
         }
     }
+    
+    @Test
+    public void ropeNodeNormalizeTest()
+    {
+    	RopeNode root = generateNonNormalizeRopeNode();
+        RopeBuilder builder = new RopeBuilder();
+        builder.normalize(root);
+        
+        Assert.assertEquals(true, root.left.isLeaf());
+        Assert.assertEquals(true, root.right.isLeaf());
+        Assert.assertEquals(SIMPLE_ROPE_STRING_EXPECTED, root.left.value);
+        
+
+    }
 
     private Rope generateComplexRope()
     {
@@ -111,5 +127,20 @@ public class RopeTest
         RopeNode root = builder.createParentNode(parentLeft, parentRight);
 
         return new RopeImpl(root);
+    }
+    
+    private RopeNode generateNonNormalizeRopeNode()
+    {
+        RopeBuilder builder = new RopeBuilder();
+    	RopeNode leafLeft = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
+    	RopeNode leafRight = builder.createLeafNode(SIMPLE_ROPE_STRING_EXPECTED);
+    	
+    	RopeNode parent = builder.createParentNode(leafLeft, null);
+    	RopeNode parentOfparent = builder.createParentNode(null, parent);
+    	RopeNode parentOfparentOfparent = builder.createParentNode(null, parentOfparent);
+    	
+    	RopeNode root = builder.createParentNode(parentOfparentOfparent, leafRight);
+    	
+    	return root;
     }
 }
